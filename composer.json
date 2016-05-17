@@ -17,7 +17,8 @@
 
   "autoload": {
     "psr-4": {
-      "mhndev\\NanoFrameworkSkeleton\\": "app/"
+      "mhndev\\NanoFrameworkSkeleton\\": "app/",
+      "mhndev\\trycatch\\":"app/"
     }
   },
   "minimum-stability": "dev"

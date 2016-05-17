@@ -2,7 +2,7 @@
 
 namespace mhndev\trycatch\Models;
 
-use mhndev\NanoFrameworkSkeleton\models\BaseModel;
+use mhndev\NanoFrameworkSkeleton\Models\BaseModel;
 
 class User extends BaseModel
 {

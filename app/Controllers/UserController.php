@@ -1,10 +1,13 @@
 <?php
 
-namespace mhndev\trycatch;
+namespace mhndev\trycatch\Controllers;
 
 
+use mhndev\NanoFramework\Csv\Csv;
 use mhndev\NanoFramework\Http\Response;
+use mhndev\NanoFramework\Ioc\Interfaces\iContainer;
 use mhndev\NanoFrameworkSkeleton\Controllers\BaseController;
+use mhndev\trycatch\Models\User;
 use mhndev\trycatch\Repository\csv\UserRepository;
 
 class UserController extends BaseController
@@ -16,12 +19,24 @@ class UserController extends BaseController
     protected $repository;
 
 
+
+    public function __construct(iContainer $container)
+    {
+        parent::__construct($container);
+
+        $this->repository = new UserRepository(new User(), 'test.csv', new Csv());
+    }
+
     /**
      * @return Response
      */
     public function indexAction()
     {
         $users = $this->repository->all();
+
+
+        var_dump($users);
+        die();
 
         return new Response($users);
     }
