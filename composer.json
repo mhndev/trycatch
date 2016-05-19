@@ -11,7 +11,8 @@
 
   "require": {
     "php": ">=5.4.0",
-    "mhndev/nano-framework":"dev-develop"
+    "mhndev/nano-framework":"dev-develop",
+    "mhndev/csv":"1.2"
   },
 
 

@@ -2,11 +2,11 @@
 
 namespace mhndev\trycatch\Repository;
 
-use mhndev\NanoFramework\Csv\Csv;
+use mhndev\csv\Csv;
 use mhndev\NanoFrameworkSkeleton\models\iModel;
 use mhndev\NanoFrameworkSkeleton\Repository\iRepository;
 
-class AbstractCsvRepository implements iRepository
+abstract class AbstractCsvRepository implements iRepository
 {
 
     protected $model;
@@ -53,7 +53,7 @@ class AbstractCsvRepository implements iRepository
      */
     public function update($id, array $data)
     {
-        $this->csvService->updateLineBy($this->filename, Csv::LINE_ID, $id, $data);
+        $this->csvService->updateLineBy($this->filename, [0=>$id], $data);
     }
 
     /**
@@ -62,17 +62,16 @@ class AbstractCsvRepository implements iRepository
      */
     public function delete($id)
     {
-        $this->csvService->deleteOnLineBy($this->filename, Csv::LINE_ID, $id);
+        $this->csvService->deleteLineBy($this->filename, [0=>$id], $id);
     }
 
     /**
      * @param array $criteria
      * @return mixed
      */
-    public function fundOneByCriteria(array $criteria)
-
+    public function findOneByCriteria(array $criteria)
     {
-        // TODO: Implement fundOneByCriteria() method.
+        $this->csvService->findOneBy($this->filename, $criteria);
     }
 
     /**
@@ -81,7 +80,7 @@ class AbstractCsvRepository implements iRepository
      */
     public function findManyByCriteria(array $criteria)
     {
-        // TODO: Implement findManyByCriteria() method.
+        $this->csvService->findManyBy($this->filename, $criteria);
     }
 
     /**
@@ -90,7 +89,7 @@ class AbstractCsvRepository implements iRepository
      */
     public function findOneById($id)
     {
-        // TODO: Implement findOneById() method.
+        $this->csvService->findOneBy($this->filename, [0=>$id]);
     }
 
     /**
@@ -99,7 +98,7 @@ class AbstractCsvRepository implements iRepository
      */
     public function findManyByIds(array $ids)
     {
-        // TODO: Implement ManyByIds() method.
+        // TODO: Implement updateManyByCriteria() method.
     }
 
     /**
@@ -168,5 +167,5 @@ class AbstractCsvRepository implements iRepository
     {
         // TODO: Implement deleteManyByIds() method.
     }
-
+    
 }

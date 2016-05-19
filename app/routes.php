@@ -5,17 +5,5 @@ $app->route('/','index','get', 'mhndev\NanoFrameworkSkeleton\Controllers\HomeCon
 $app->get('/users','users_index','mhndev\trycatch\Controllers\UserController@indexAction');
 
 
-$app->get('/test/public/index.php', 'index2', function($ioc){
-    $csvService = new \mhndev\NanoFramework\Csv\Csv();
-
-    //$csvService->arrayToCsv([['majid','ali','ruzbeh']], 'test.csv');
-    //$csvService->addLine('test.csv',['majid','hamid','gavad']);
-
-    $csvService->deleteOnLineBy('test.csv', \mhndev\NanoFramework\Csv\Csv::LINE_NUMBER , 2);
-
-
-    die();
-});
-
 
 //$app->get('/test/public/index.php', 'index2', '\App\Controllers\HomeController@fooAction');

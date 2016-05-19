@@ -11,6 +11,11 @@ return [
         'arguments' => ['@container']
     ],
 
+    'csv'=>[
+        'class'=>\mhndev\csv\Csv::class
+    ],
+
+
     'http'=>[
         'class'=>\mhndev\NanoFramework\Http\Http::class
     ],

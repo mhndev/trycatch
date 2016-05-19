@@ -2,8 +2,6 @@
 
 namespace mhndev\trycatch\Controllers;
 
-
-use mhndev\NanoFramework\Csv\Csv;
 use mhndev\NanoFramework\Http\Response;
 use mhndev\NanoFramework\Ioc\Interfaces\iContainer;
 use mhndev\NanoFrameworkSkeleton\Controllers\BaseController;
@@ -19,13 +17,17 @@ class UserController extends BaseController
     protected $repository;
 
 
-
+    /**
+     * UserController constructor.
+     * @param iContainer $container
+     */
     public function __construct(iContainer $container)
     {
         parent::__construct($container);
 
-        $this->repository = new UserRepository(new User(), 'test.csv', new Csv());
+        $this->repository = new UserRepository(new User(), 'test.csv', $container->get('csv'));
     }
+
 
     /**
      * @return Response
@@ -33,56 +35,44 @@ class UserController extends BaseController
     public function indexAction()
     {
         $users = $this->repository->all();
-
-
-        var_dump($users);
-        die();
-
-        return new Response($users);
     }
 
 
     /**
-     *
+     * @return Response
      */
     public function createAction()
     {
         $data = $this->request->getParsedBody();
 
         $user = $this->repository->create($data);
-
-        return new Response($user);
-
     }
 
 
     /**
-     *
+     * @return Response
      */
     public function showAction()
     {
         $id = $this->request->getQueryParams()['id'];
 
         $user = $this->repository->findOneById($id);
-
-        return new Response($user);
     }
 
 
     /**
-     *
+     * @return Response
      */
     public function deleteAction()
     {
         $id = $this->request->getQueryParams()['id'];
 
         $this->repository->deleteOneById($id);
-
-        return new Response();
     }
 
+
     /**
-     *
+     * @return Response
      */
     public function updateAction()
     {
@@ -94,21 +84,25 @@ class UserController extends BaseController
         return new Response($user);
     }
 
+
+    /**
+     * @return Response
+     */
     public function deleteBulkAction()
     {
         $this->repository->deleteManyByIds($this->request->getParsedBody()['ids']);
-
-        return new Response();
     }
 
+
+    /**
+     * @return Response
+     */
     public function updateBulkAction()
     {
         $data = $this->request->getParsedBody();
         unset($data['ids']);
 
         $this->repository->updateManyByIds($data['ids'], $data);
-
-        return new Response();
     }
 
 }
