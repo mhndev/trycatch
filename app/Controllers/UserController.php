@@ -7,6 +7,9 @@ use mhndev\NanoFramework\Ioc\Interfaces\iContainer;
 use mhndev\NanoFrameworkSkeleton\Controllers\BaseController;
 use mhndev\trycatch\Models\User;
 use mhndev\trycatch\Repository\csv\UserRepository;
+use mhndev\trycatch\ValueObjects\JsonApiPresenter;
+use mhndev\trycatch\ValueObjects\ResponseMessages;
+use mhndev\trycatch\ValueObjects\ResponseStatuses;
 
 class UserController extends BaseController
 {
@@ -35,6 +38,12 @@ class UserController extends BaseController
     public function indexAction()
     {
         $users = $this->repository->all();
+
+        return (new JsonApiPresenter())
+            ->setData($users)
+            ->setStatus(ResponseStatuses::SUCCESS)
+            ->setStatusCode(200)
+            ->toJsonResponse(new Response());
     }
 
 
@@ -46,6 +55,12 @@ class UserController extends BaseController
         $data = $this->request->getParsedBody();
 
         $user = $this->repository->create($data);
+
+        return (new JsonApiPresenter())
+            ->setData($user)
+            ->setStatus(ResponseStatuses::SUCCESS)
+            ->setStatusCode(200)
+            ->toJsonResponse(new Response());
     }
 
 
@@ -57,6 +72,13 @@ class UserController extends BaseController
         $id = $this->request->getQueryParams()['id'];
 
         $user = $this->repository->findOneById($id);
+
+        return (new JsonApiPresenter())
+            ->setData($user)
+            ->setStatus(ResponseStatuses::SUCCESS)
+            ->setStatusCode(200)
+            ->toJsonResponse(new Response());
+
     }
 
 
@@ -68,6 +90,13 @@ class UserController extends BaseController
         $id = $this->request->getQueryParams()['id'];
 
         $this->repository->deleteOneById($id);
+
+
+        return (new JsonApiPresenter())
+            ->setStatus(ResponseStatuses::SUCCESS)
+            ->setStatusCode(200)
+            ->setMessage(ResponseMessages::DELETED)
+            ->toJsonResponse(new Response());
     }
 
 
@@ -81,7 +110,12 @@ class UserController extends BaseController
 
         $user = $this->repository->updateOneById($id, $data);
 
-        return new Response($user);
+        return (new JsonApiPresenter())
+            ->setStatus(ResponseStatuses::SUCCESS)
+            ->setStatusCode(200)
+            ->setData($user)
+            ->setMessage(ResponseMessages::UPDATED)
+            ->toJsonResponse(new Response());
     }
 
 
@@ -91,18 +125,14 @@ class UserController extends BaseController
     public function deleteBulkAction()
     {
         $this->repository->deleteManyByIds($this->request->getParsedBody()['ids']);
+
+
+        return (new JsonApiPresenter())
+            ->setStatus(ResponseStatuses::SUCCESS)
+            ->setStatusCode(200)
+            ->setMessage(ResponseMessages::DELETED)
+            ->toJsonResponse(new Response());
     }
-
-
-    /**
-     * @return Response
-     */
-    public function updateBulkAction()
-    {
-        $data = $this->request->getParsedBody();
-        unset($data['ids']);
-
-        $this->repository->updateManyByIds($data['ids'], $data);
-    }
+    
 
 }

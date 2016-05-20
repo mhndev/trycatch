@@ -60,12 +60,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mhndev/NanoFramework.git",
-                "reference": "2481ad2e7958cb03c51551e0899b7a873cdf7695"
+                "reference": "0951d717758b45439bfe97c305854c57c5a5a316"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mhndev/NanoFramework/zipball/2481ad2e7958cb03c51551e0899b7a873cdf7695",
-                "reference": "2481ad2e7958cb03c51551e0899b7a873cdf7695",
+                "url": "https://api.github.com/repos/mhndev/NanoFramework/zipball/0951d717758b45439bfe97c305854c57c5a5a316",
+                "reference": "0951d717758b45439bfe97c305854c57c5a5a316",
                 "shasum": ""
             },
             "require": {
@@ -97,7 +97,7 @@
                 "nano framework",
                 "php framework"
             ],
-            "time": "2016-05-19 10:54:21"
+            "time": "2016-05-20 20:48:30"
         }
     ],
     "packages-dev": [],

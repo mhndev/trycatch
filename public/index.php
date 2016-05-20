@@ -26,8 +26,3 @@ $app = $ioc->get('http-kernel');
 require_once '../app/routes.php';
 
 $response = $app->run($request);
-
-var_dump($response);
-die();
-
-$response->send();
