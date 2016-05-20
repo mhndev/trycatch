@@ -96,6 +96,9 @@ class JsonApiPresenter
      */
     public function getData()
     {
+        if(empty($this->data))
+            return null;
+
         if ( is_array($this->data) && $this->isAssoc($this->data)) {
             $data = [
                 $this->getDataMainKey() => $this->data[$this->getDataMainKey()],
@@ -155,8 +158,11 @@ class JsonApiPresenter
             'status' => $this->status,
             'message' => $this->message,
             'description' => $this->description,
-            'data' => $this->getData()
         ];
+
+        if(!empty($this->data)){
+            $responseBody['data'] = $this->getData();
+        }
 
 
         $response = $response->withBody(json_encode($responseBody));

@@ -40,7 +40,8 @@ class UserController extends BaseController
         $users = $this->repository->all();
 
         return (new JsonApiPresenter())
-            ->setData($users)
+            ->setData(['users'=>$users])
+            ->setDataMainKey('users')
             ->setStatus(ResponseStatuses::SUCCESS)
             ->setStatusCode(200)
             ->toJsonResponse(new Response());
@@ -57,7 +58,8 @@ class UserController extends BaseController
         $user = $this->repository->create($data);
 
         return (new JsonApiPresenter())
-            ->setData($user)
+            ->setData(['user'=>$user])
+            ->setDataMainKey('user')
             ->setStatus(ResponseStatuses::SUCCESS)
             ->setStatusCode(200)
             ->toJsonResponse(new Response());
@@ -74,7 +76,8 @@ class UserController extends BaseController
         $user = $this->repository->findOneById($id);
 
         return (new JsonApiPresenter())
-            ->setData($user)
+            ->setData(['user'=>$user])
+            ->setDataMainKey('user')
             ->setStatus(ResponseStatuses::SUCCESS)
             ->setStatusCode(200)
             ->toJsonResponse(new Response());
@@ -113,7 +116,8 @@ class UserController extends BaseController
         return (new JsonApiPresenter())
             ->setStatus(ResponseStatuses::SUCCESS)
             ->setStatusCode(200)
-            ->setData($user)
+            ->setData(['user'=>$user])
+            ->setDataMainKey('user')
             ->setMessage(ResponseMessages::UPDATED)
             ->toJsonResponse(new Response());
     }

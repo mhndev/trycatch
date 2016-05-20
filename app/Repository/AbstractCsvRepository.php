@@ -44,6 +44,8 @@ abstract class AbstractCsvRepository implements iRepository
     public function create(array $data)
     {
         $this->csvService->addLine($this->filename, $data);
+
+        return $data;
     }
 
     /**
@@ -54,6 +56,8 @@ abstract class AbstractCsvRepository implements iRepository
     public function update($id, array $data)
     {
         $this->csvService->updateLineBy($this->filename, [0=>$id], $data);
+
+        return $data;
     }
 
     /**
@@ -146,7 +150,7 @@ abstract class AbstractCsvRepository implements iRepository
      */
     public function deleteOneById($id)
     {
-
+        $this->csvService->deleteLineBy($this->filename, [ 0 => $id]);
     }
 
     /**

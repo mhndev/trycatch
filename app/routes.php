@@ -6,7 +6,7 @@ $app->route('/','index','get', 'mhndev\NanoFrameworkSkeleton\Controllers\HomeCon
 
 $app->get('/users','users_index','mhndev\trycatch\Controllers\UserController@indexAction');
 
-$app->route('/trycatch/public/index.php','index','get', 'mhndev\trycatch\Controllers\UserController@indexAction');
+$app->route('/trycatch/public/index.php','index','delete', 'mhndev\trycatch\Controllers\UserController@deleteAction');
 
 
 
