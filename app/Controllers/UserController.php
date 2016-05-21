@@ -62,6 +62,7 @@ class UserController extends BaseController
             ->setDataMainKey('user')
             ->setStatus(ResponseStatuses::SUCCESS)
             ->setStatusCode(200)
+            ->setMessage(ResponseMessages::CREATED)
             ->toJsonResponse(new Response());
     }
 

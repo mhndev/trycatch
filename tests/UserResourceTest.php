@@ -1,0 +1,235 @@
+<?php
+
+
+namespace mhndev\trycatch\Resources;
+
+use GuzzleHttp\Client;
+
+class UserResourceTest extends \PHPUnit_Framework_TestCase
+{
+
+    /**
+     * @var Client
+     */
+    protected $client;
+
+
+    protected $baseUri = 'http://localhost';
+
+
+    protected $path = [
+        'index'=>'/trycatch/public/index.php/users',
+        'create'=>'',
+        'show'=>'',
+        'delete'=>'',
+        'update'>'',
+        'deleteBulk'=>''
+    ];
+
+    protected function setUp()
+    {
+        $this->client = new Client([
+            'base_uri' => $this->baseUri
+        ]);
+    }
+
+    public function indexAction()
+    {
+        $response = $this->client->get($this->path['index']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody(), true);
+
+        $main = $data['data'];
+
+        $this->assertArrayHasKey('status', $data);
+        $this->assertArrayHasKey('data', $data);
+        $this->assertArrayHasKey('users', $main);
+
+    }
+
+
+
+    public function createAction()
+    {
+        $response = $this->client->post($this->path['create'], [
+            'body' => [
+                'name' => 'majid',
+                'phone'=> '09124971706',
+                'street' =>'piroozi'
+            ]
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody(), true);
+        $main = $data['data'];
+
+
+        $this->assertArrayHasKey('status', $data);
+
+        $this->assertArrayHasKey('user', $main);
+        $this->assertEquals('created', $data['message']);
+    }
+
+
+
+    public function showAction()
+    {
+        $response = $this->client->post($this->path['create'], [
+            'body' => [
+                'name' => 'majid',
+                'phone'=> '09124971706',
+                'street' =>'piroozi'
+            ]
+        ]);
+
+
+        $data = json_decode($response->getBody(), true);
+
+        $newLyCreatedUserId = $data['user'][0];
+
+
+        $response = $this->client->get($this->path['show'], [
+            'query' => [
+                'id' => $newLyCreatedUserId
+            ]
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody(), true);
+
+        $this->assertArrayHasKey('status', $data);
+
+
+        $this->assertEquals('deleted', $data['message']);
+    }
+
+
+
+    public function testDeleteResource()
+    {
+        $response = $this->client->post($this->path['create'], [
+            'body' => [
+                'name' => 'majid',
+                'phone'=> '09124971706',
+                'street' =>'piroozi'
+            ]
+        ]);
+
+
+        $data = json_decode($response->getBody(), true);
+
+        $newLyCreatedUserId = $data['user'][0];
+
+
+
+
+        $response = $this->client->get($this->path['delete'], [
+            'query' => [
+                'id' => $newLyCreatedUserId
+            ]
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody(), true);
+
+        $this->assertArrayHasKey('status', $data);
+
+
+        $this->assertEquals('deleted', $data['message']);
+    }
+
+
+
+    public function updateAction()
+    {
+        $response = $this->client->post($this->path['create'], [
+            'body' => [
+                'name' => 'majid',
+                'phone'=> '09124971706',
+                'street' =>'piroozi'
+            ]
+        ]);
+
+
+        $data = json_decode($response->getBody(), true);
+
+        $newLyCreatedUserId = $data['user'][0];
+
+
+        $response = $this->client->get($this->path['update'], [
+            'query' => [
+                'id' => $newLyCreatedUserId
+            ],
+            'body' => [
+                'name' => 'John',
+                'phone'=> '09124971706',
+                'street' =>'piroozi'
+            ]
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody(), true);
+
+        $this->assertArrayHasKey('status', $data);
+
+
+        $this->assertEquals('John', $data['data']['user'][1]);
+
+        $this->assertEquals('updated', $data['message']);
+    }
+
+
+    public function deleteBulkAction()
+    {
+        $response = $this->client->post($this->path['create'], [
+            'body' => [
+                'name' => 'majid',
+                'phone'=> '09124971706',
+                'street' =>'piroozi'
+            ]
+        ]);
+
+
+        $data = json_decode($response->getBody(), true);
+
+        $newLyCreatedUserId1 = $data['user'][0];
+
+
+
+        $response = $this->client->post($this->path['create'], [
+            'body' => [
+                'name' => 'hamid',
+                'phone'=> '09124971706',
+                'street' =>'piroozi'
+            ]
+        ]);
+
+
+        $data = json_decode($response->getBody(), true);
+
+        $newLyCreatedUserId2 = $data['user'][0];
+
+
+
+        $response = $this->client->get($this->path['deleteBulk'], [
+            'body' => [
+                'ids' => [$newLyCreatedUserId1, $newLyCreatedUserId2]
+            ]
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $data = json_decode($response->getBody(), true);
+
+        $this->assertArrayHasKey('status', $data);
+
+
+        $this->assertEquals('deleted', $data['message']);
+    }
+}

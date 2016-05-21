@@ -43,6 +43,12 @@ abstract class AbstractCsvRepository implements iRepository
      */
     public function create(array $data)
     {
+        $array = $this->csvService->csvToArray($this->filename);
+
+        $lastIdInserted = $array[count($array)-1][0];
+
+        array_unshift($array, $lastIdInserted + 1 );
+
         $this->csvService->addLine($this->filename, $data);
 
         return $data;
