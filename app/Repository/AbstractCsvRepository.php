@@ -3,6 +3,7 @@
 namespace mhndev\trycatch\Repository;
 
 use mhndev\csv\Csv;
+use mhndev\NanoFrameworkSkeleton\Exceptions\ModelNotFound;
 use mhndev\NanoFrameworkSkeleton\models\iModel;
 use mhndev\NanoFrameworkSkeleton\Repository\iRepository;
 
@@ -72,6 +73,8 @@ abstract class AbstractCsvRepository implements iRepository
      */
     public function delete($id)
     {
+        $this->findOneById($id);
+
         $this->csvService->deleteLineBy($this->filename, [0=>$id], $id);
     }
 
@@ -96,10 +99,14 @@ abstract class AbstractCsvRepository implements iRepository
     /**
      * @param $id
      * @return mixed
+     * @throws ModelNotFound
      */
     public function findOneById($id)
     {
-        $this->csvService->findOneBy($this->filename, [0=>$id]);
+        $result = $this->csvService->findOneBy($this->filename, [ 0 => $id ] );
+        
+        if(!$result)
+            throw new ModelNotFound;
     }
 
     /**
@@ -156,6 +163,8 @@ abstract class AbstractCsvRepository implements iRepository
      */
     public function deleteOneById($id)
     {
+        $this->findOneById($id);
+
         $this->csvService->deleteLineBy($this->filename, [ 0 => $id]);
     }
 
@@ -166,7 +175,7 @@ abstract class AbstractCsvRepository implements iRepository
      */
     public function updateOneById($id, array $data)
     {
-        // TODO: Implement updateOneById() method.
+        $this->findOneById($id);
     }
 
     /**

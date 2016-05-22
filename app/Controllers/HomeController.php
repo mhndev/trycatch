@@ -13,7 +13,7 @@ class HomeController extends BaseController
 {
     public function indexAction()
     {
-        die('index action executed successfully.');
+        die('index action executed .');
     }
 
     public function fooAction()

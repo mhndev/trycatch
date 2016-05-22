@@ -68,12 +68,11 @@ class UserController extends BaseController
 
 
     /**
+     * @param $id
      * @return Response
      */
-    public function showAction()
+    public function showAction($id)
     {
-        $id = $this->request->getQueryParams()['id'];
-
         $user = $this->repository->findOneById($id);
 
         return (new JsonApiPresenter())
@@ -87,12 +86,11 @@ class UserController extends BaseController
 
 
     /**
+     * @param $id
      * @return Response
      */
-    public function deleteAction()
+    public function deleteAction($id)
     {
-        $id = $this->request->getQueryParams()['id'];
-
         $this->repository->deleteOneById($id);
 
 
@@ -105,11 +103,11 @@ class UserController extends BaseController
 
 
     /**
+     * @param $id
      * @return Response
      */
-    public function updateAction()
+    public function updateAction($id)
     {
-        $id = $this->request->getQueryParams()['id'];
         $data = $this->request->getParsedBody();
 
         $user = $this->repository->updateOneById($id, $data);
