@@ -48,9 +48,9 @@ abstract class AbstractCsvRepository implements iRepository
 
         $lastIdInserted = $array[count($array)-1][0];
 
-        array_unshift($array, $lastIdInserted + 1 );
+        array_unshift($data, $lastIdInserted + 1 );
 
-        $this->csvService->addLine($this->filename, $data);
+        $this->csvService->addLine($this->filename, array_values($data));
 
         return $data;
     }
@@ -62,7 +62,9 @@ abstract class AbstractCsvRepository implements iRepository
      */
     public function update($id, array $data)
     {
-        $this->csvService->updateLineBy($this->filename, [0=>$id], $data);
+        array_unshift($data, $id);
+
+        $this->csvService->updateLineBy($this->filename, [0=>$id], array_values($data));
 
         return $data;
     }
@@ -176,6 +178,7 @@ abstract class AbstractCsvRepository implements iRepository
     public function updateOneById($id, array $data)
     {
         $this->findOneById($id);
+        return $this->update($id, $data);
     }
 
     /**
@@ -184,7 +187,9 @@ abstract class AbstractCsvRepository implements iRepository
      */
     public function deleteManyByIds(array $ids)
     {
-        // TODO: Implement deleteManyByIds() method.
+        foreach ($ids as $id){
+            $this->deleteOneById($id);
+        }
     }
     
 }

@@ -14,16 +14,16 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
     protected $client;
 
 
-    protected $baseUri = 'http://localhost';
+    protected $baseUri = 'http://localhost:8000';
 
 
     protected $path = [
-        'index'=>'/trycatch/public/index.php/users',
-        'create'=>'',
-        'show'=>'',
-        'delete'=>'',
-        'update'>'',
-        'deleteBulk'=>''
+        'index'=>'/users',
+        'create'=>'/users',
+        'show'=>'/users',
+        'delete'=>'/users',
+        'update'=>'/users',
+        //       'deleteBulk'=>'/users/bulk'
     ];
 
     protected function setUp()
@@ -33,7 +33,7 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function indexAction()
+    public function testIndexAction()
     {
         $response = $this->client->get($this->path['index']);
 
@@ -51,10 +51,10 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
 
 
-    public function createAction()
+    public function testCreateAction()
     {
         $response = $this->client->post($this->path['create'], [
-            'body' => [
+            'form_params' => [
                 'name' => 'majid',
                 'phone'=> '09124971706',
                 'street' =>'piroozi'
@@ -64,6 +64,7 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $data = json_decode($response->getBody(), true);
+
         $main = $data['data'];
 
 
@@ -75,10 +76,10 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
 
 
-    public function showAction()
+    public function testShowAction()
     {
         $response = $this->client->post($this->path['create'], [
-            'body' => [
+            'form_params' => [
                 'name' => 'majid',
                 'phone'=> '09124971706',
                 'street' =>'piroozi'
@@ -87,15 +88,9 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
 
         $data = json_decode($response->getBody(), true);
+        $newLyCreatedUserId = $data['data'][$data['data']['mainKey']][0];
 
-        $newLyCreatedUserId = $data['user'][0];
-
-
-        $response = $this->client->get($this->path['show'], [
-            'query' => [
-                'id' => $newLyCreatedUserId
-            ]
-        ]);
+        $response = $this->client->get($this->path['show'].'/'.$newLyCreatedUserId);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -103,16 +98,14 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('status', $data);
 
-
-        $this->assertEquals('deleted', $data['message']);
+        $this->assertEquals('found', $data['message']);
     }
-
 
 
     public function testDeleteResource()
     {
         $response = $this->client->post($this->path['create'], [
-            'body' => [
+            'form_params' => [
                 'name' => 'majid',
                 'phone'=> '09124971706',
                 'street' =>'piroozi'
@@ -122,16 +115,12 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
         $data = json_decode($response->getBody(), true);
 
-        $newLyCreatedUserId = $data['user'][0];
+        $newLyCreatedUserId = $data['data'][$data['data']['mainKey']][0];
 
 
 
 
-        $response = $this->client->get($this->path['delete'], [
-            'query' => [
-                'id' => $newLyCreatedUserId
-            ]
-        ]);
+        $response = $this->client->delete($this->path['delete'].'/'.$newLyCreatedUserId);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -145,10 +134,11 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
 
 
-    public function updateAction()
+
+    public function testUpdateAction()
     {
         $response = $this->client->post($this->path['create'], [
-            'body' => [
+            'form_params' => [
                 'name' => 'majid',
                 'phone'=> '09124971706',
                 'street' =>'piroozi'
@@ -158,14 +148,11 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
         $data = json_decode($response->getBody(), true);
 
-        $newLyCreatedUserId = $data['user'][0];
+        $newLyCreatedUserId = $data['data'][$data['data']['mainKey']][0];
 
+        $response = $this->client->put($this->path['update'].'/'.$newLyCreatedUserId, [
 
-        $response = $this->client->get($this->path['update'], [
-            'query' => [
-                'id' => $newLyCreatedUserId
-            ],
-            'body' => [
+            'form_params' => [
                 'name' => 'John',
                 'phone'=> '09124971706',
                 'street' =>'piroozi'
@@ -178,58 +165,57 @@ class UserResourceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('status', $data);
 
-
-        $this->assertEquals('John', $data['data']['user'][1]);
+        $this->assertEquals('John', $data['data']['user']['name']);
 
         $this->assertEquals('updated', $data['message']);
     }
 
-
-    public function deleteBulkAction()
-    {
-        $response = $this->client->post($this->path['create'], [
-            'body' => [
-                'name' => 'majid',
-                'phone'=> '09124971706',
-                'street' =>'piroozi'
-            ]
-        ]);
-
-
-        $data = json_decode($response->getBody(), true);
-
-        $newLyCreatedUserId1 = $data['user'][0];
-
-
-
-        $response = $this->client->post($this->path['create'], [
-            'body' => [
-                'name' => 'hamid',
-                'phone'=> '09124971706',
-                'street' =>'piroozi'
-            ]
-        ]);
-
-
-        $data = json_decode($response->getBody(), true);
-
-        $newLyCreatedUserId2 = $data['user'][0];
-
-
-
-        $response = $this->client->get($this->path['deleteBulk'], [
-            'body' => [
-                'ids' => [$newLyCreatedUserId1, $newLyCreatedUserId2]
-            ]
-        ]);
-
-        $this->assertEquals(200, $response->getStatusCode());
-
-        $data = json_decode($response->getBody(), true);
-
-        $this->assertArrayHasKey('status', $data);
-
-
-        $this->assertEquals('deleted', $data['message']);
-    }
+//
+//        public function testDeleteBulkAction()
+//        {
+//            $response = $this->client->post($this->path['create'], [
+//                'body' => [
+//                    'name' => 'majid',
+//                    'phone'=> '09124971706',
+//                    'street' =>'piroozi'
+//                ]
+//            ]);
+//
+//
+//            $data = json_decode($response->getBody(), true);
+//
+//            $newLyCreatedUserId1 = $data['user'][0];
+//
+//
+//
+//            $response = $this->client->post($this->path['create'], [
+//                'body' => [
+//                    'name' => 'hamid',
+//                    'phone'=> '09124971706',
+//                    'street' =>'piroozi'
+//                ]
+//            ]);
+//
+//
+//            $data = json_decode($response->getBody(), true);
+//
+//            $newLyCreatedUserId2 = $data['user'][0];
+//
+//
+//
+//            $response = $this->client->get($this->path['deleteBulk'], [
+//                'body' => [
+//                    'ids' => [$newLyCreatedUserId1, $newLyCreatedUserId2]
+//                ]
+//            ]);
+//
+//            $this->assertEquals(200, $response->getStatusCode());
+//
+//            $data = json_decode($response->getBody(), true);
+//
+//            $this->assertArrayHasKey('status', $data);
+//
+//
+//            $this->assertEquals('deleted', $data['message']);
+//        }
 }

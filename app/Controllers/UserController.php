@@ -80,6 +80,7 @@ class UserController extends BaseController
             ->setDataMainKey('user')
             ->setStatus(ResponseStatuses::SUCCESS)
             ->setStatusCode(200)
+            ->setMessage(ResponseMessages::FOUND)
             ->toJsonResponse(new Response());
 
     }
@@ -92,7 +93,6 @@ class UserController extends BaseController
     public function deleteAction($id)
     {
         $this->repository->deleteOneById($id);
-
 
         return (new JsonApiPresenter())
             ->setStatus(ResponseStatuses::SUCCESS)
@@ -109,7 +109,6 @@ class UserController extends BaseController
     public function updateAction($id)
     {
         $data = $this->request->getParsedBody();
-
         $user = $this->repository->updateOneById($id, $data);
 
         return (new JsonApiPresenter())
@@ -122,20 +121,19 @@ class UserController extends BaseController
     }
 
 
-    /**
-     * @return Response
-     */
-    public function deleteBulkAction()
-    {
-        $this->repository->deleteManyByIds($this->request->getParsedBody()['ids']);
-
-
-        return (new JsonApiPresenter())
-            ->setStatus(ResponseStatuses::SUCCESS)
-            ->setStatusCode(200)
-            ->setMessage(ResponseMessages::DELETED)
-            ->toJsonResponse(new Response());
-    }
+//    /**
+//     * @return Response
+//     */
+//    public function deleteBulkAction()
+//    {
+//        $this->repository->deleteManyByIds($this->request->getParsedBody()['ids']);
+//
+//        return (new JsonApiPresenter())
+//            ->setStatus(ResponseStatuses::SUCCESS)
+//            ->setStatusCode(200)
+//            ->setMessage(ResponseMessages::DELETED)
+//            ->toJsonResponse(new Response());
+//    }
     
 
 }
